@@ -156,12 +156,15 @@ namespace TeleporterPlugin {
 
         private static void InitData(DalamudPluginInterface plugin) {
             var aetherytes = plugin.Data.GetExcelSheet<Aetheryte>();
+            var placeNames = plugin.Data.GetExcelSheet<PlaceName>();
             AetheryteNames = new Dictionary<uint, string>();
             aetherytes.GetRows().ForEach(data => {
-                var name = data.PlaceName?.Value.Name;
-                if(string.IsNullOrEmpty(name) || data.RowId <= 0) return;
-                if(!AetheryteNames.ContainsKey(data.RowId))
-                    AetheryteNames.Add(data.RowId, name);
+                var id = (uint)data.RowId;
+                var nameId = data.PlaceName;
+                var name = placeNames.GetRow(nameId)?.Name;
+                if(string.IsNullOrEmpty(name) || id <= 0) return;
+                if(!AetheryteNames.ContainsKey(id))
+                    AetheryteNames.Add(id, name);
             });
         }
 
